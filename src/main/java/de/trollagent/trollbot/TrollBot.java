@@ -3,6 +3,7 @@ package de.trollagent.trollbot;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import de.trollagent.trollbot.joinrole.smp.JoinRoleSMPEvents;
 import de.trollagent.trollbot.musik.commands.JoinCommand;
 import de.trollagent.trollbot.musik.commands.PlayCommand;
 import de.trollagent.trollbot.musik.commands.SetVolumeCommand;
@@ -18,6 +19,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import javax.security.auth.login.LoginException;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class TrollBot {
 
@@ -33,6 +35,11 @@ public class TrollBot {
         jdaBuilder.setMemberCachePolicy(MemberCachePolicy.ALL);
         jdaBuilder.setChunkingFilter(ChunkingFilter.ALL);
         jdaBuilder.enableCache(Arrays.asList(CacheFlag.values()));
+
+        //Events
+        jdaBuilder.addEventListeners(
+                new JoinRoleSMPEvents()
+        );
 
         //Audio
         audioPlayerManager = new DefaultAudioPlayerManager();
@@ -63,6 +70,18 @@ public class TrollBot {
         new JoinCommand("join", "Join your VoiceChannel", jda).onlyGuilds(true).register();
         //User Command
         new StopCommand("stop", "Stop the music", jda).onlyGuilds(true).register();
+
+        Scanner scan = new Scanner(System.in);
+        String str = null;
+        while (jda != null) {
+            str = scan.nextLine();
+            if (str.equals("stop")) {
+                jda.shutdownNow();
+                break;
+            }
+        }
+        jda.shutdownNow();
+        System.exit(0);
 
     }
 

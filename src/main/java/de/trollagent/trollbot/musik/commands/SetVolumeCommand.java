@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.exceptions.ContextException;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 import java.awt.*;
@@ -35,15 +36,18 @@ public class SetVolumeCommand extends SlashCommand {
             event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
             return;
         }
+
         MusicController musicController = TrollBot.playerManager.getMusicController(guild);
         musicController.getAudioPlayer().setVolume(event.getOption("volume").getAsInt());
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
 
         embedBuilder.setColor(Color.GREEN);
-        embedBuilder.setTitle("Volume is now " + event.getOption("volume").getAsInt());
+        embedBuilder.setTitle("Volume is now " + String.valueOf(event.getOption("volume").getAsInt()));
 
         event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
+        return;
+
 
     }
 }

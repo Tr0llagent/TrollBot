@@ -38,7 +38,7 @@ public class AudioResultHandler implements AudioLoadResultHandler {
         EmbedBuilder embedBuilder = new EmbedBuilder();
 
         embedBuilder.setColor(Color.GREEN);
-        embedBuilder.setTitle("Now playing "+ url.replace("ytsearch: ", ""));
+        embedBuilder.setTitle("Now playing "+ url);
 
         event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
 
