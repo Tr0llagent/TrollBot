@@ -3,6 +3,7 @@ package de.trollagent.trollbot;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import de.trollagent.trollbot.joinrole.AddJoinRoleCommand;
 import de.trollagent.trollbot.joinrole.smp.JoinRoleSMPEvents;
 import de.trollagent.trollbot.musik.commands.JoinCommand;
 import de.trollagent.trollbot.musik.commands.PlayCommand;
@@ -70,6 +71,11 @@ public class TrollBot {
         new JoinCommand("join", "Join your VoiceChannel", jda).onlyGuilds(true).register();
         //User Command
         new StopCommand("stop", "Stop the music", jda).onlyGuilds(true).register();
+
+        //JoinRole
+        new AddJoinRoleCommand("addjoinrole", "Set the joinrole for the server", jda)
+                .addOption(OptionType.ROLE, "role", "The role that the user gets when he joins", true)
+                .register();
 
         Scanner scan = new Scanner(System.in);
         String str = null;

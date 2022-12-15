@@ -48,6 +48,5 @@ public class SetVolumeCommand extends SlashCommand {
         event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
         return;
 
-
     }
 }
