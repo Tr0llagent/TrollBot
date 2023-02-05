@@ -23,14 +23,15 @@ public class AddJoinRoleCommand extends SlashCommand {
 
         GuildData guildData = GuildData.getByGuildId(event.getGuild().getId());
 
-        ArrayList<Role> roles = new ArrayList<>();
+        ArrayList<String> roles = new ArrayList<>();
         HashMap<String, Object> data = guildData.getData();
 
         if (data.containsKey("joinroles")) {
-            roles = (ArrayList<Role>) data.get("joinroles");
+            roles = (ArrayList<String>) data.get("joinroles");
         }
 
-        roles.add(role);
+        roles.add(role.getId());
+        data.put("joinroles", roles);
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
 
@@ -43,9 +44,9 @@ public class AddJoinRoleCommand extends SlashCommand {
 
         String temp = "";
 
-        roles = (ArrayList<Role>) guildData.getData().get("joinroles");
-        for (Role role1 : roles) {
-            temp += role1.getName() + " ";
+        roles = (ArrayList<String>) guildData.getData().get("joinroles");
+        for (String role1 : roles) {
+            temp += getJda().getRoleById(role1).getName() + " ";
         }
 
         event.getChannel().sendMessage(temp).queue();

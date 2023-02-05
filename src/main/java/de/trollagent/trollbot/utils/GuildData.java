@@ -1,23 +1,21 @@
 package de.trollagent.trollbot.utils;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import de.trollagent.trollbot.utils.mongodb.MongoDB;
+import org.bson.Document;
 
-import java.io.*;
 import java.util.HashMap;
 
 public class GuildData {
 
     private String guildId;
-    private HashMap<String, Object> data = new HashMap<>();
+    private HashMap<String, Object> data;
+    private MongoDB mongoDB;
 
-    public GuildData(String guildId) {
+    public GuildData(String guildId, HashMap<String, Object> data) {
         this.guildId = guildId;
+        this.data =data;
+        mongoDB = new MongoDB();
         save();
-    }
-
-    public GuildData() {
-
     }
 
     public HashMap<String, Object> getData() {
@@ -30,26 +28,21 @@ public class GuildData {
     }
 
     private void save() {
-
-        new File("guilddata/").mkdirs();
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().enableComplexMapKeySerialization().create();
-
-        try (FileWriter fileWriter = new FileWriter("guilddata/" + guildId + ".json")) {
-            gson.toJson(this, fileWriter);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        Document document = new Document().append("guildId", guildId).append("guildData", data);
+        Document filterDocument = new Document("guildId", guildId);
+        mongoDB.getMongoCollection().insertOne(document);
     }
 
     public static GuildData getByGuildId(String guildId) {
-        try (FileReader fileReader = new FileReader("guilddata/" + guildId + ".json")) {
-            Gson gson = new GsonBuilder().setPrettyPrinting().enableComplexMapKeySerialization().create();
-            return gson.fromJson(fileReader, GuildData.class);
-        } catch (IOException e) {
-            return new GuildData(guildId);
+
+        MongoDB secondMongoDB = new MongoDB();
+
+        Document document = new Document("guildId", guildId);
+
+        if (secondMongoDB.getMongoCollection().find(document).first() != null) {
+            return new GuildData(guildId, (HashMap<String, Object>) secondMongoDB.getMongoCollection().find(document).first().get("guildData"));
         }
+        return new GuildData(guildId, new HashMap<>());
     }
 
 }
